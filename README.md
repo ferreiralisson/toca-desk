@@ -8,6 +8,18 @@ O aplicativo é escrito em Swift, com SwiftUI e AppKit. As consultas estruturada
 
 **Projeto comunitário independente:** Toca Desk não é o Mole oficial nem o aplicativo Mole for Mac, e não é afiliado, patrocinado ou endossado por tw93 ou pelo projeto Mole. O CLI é desenvolvido e mantido por seus autores; esta interface acrescenta uma camada de apresentação. O nome e o ícone da interface são próprios. Consulte [créditos e licenças](THIRD_PARTY_NOTICES.md).
 
+## Baixar e instalar
+
+### [⬇ Baixar o instalador completo para macOS](https://github.com/ferreiralisson/toca-desk/releases/latest/download/TocaDesk-Installer.pkg)
+
+**Requer Mac com Apple Silicon (M1 ou posterior) e macOS 14+.** Inclui Toca Desk e Mole CLI; não é necessário compilar, instalar Homebrew ou ter internet durante a instalação.
+
+1. Baixe o arquivo `.pkg` pelo link acima.
+2. Feche o Toca Desk, caso esteja aberto, e abra o instalador.
+3. Siga as etapas do macOS e depois abra **Toca Desk** na pasta Aplicativos.
+
+**Esta versão ainda não possui assinatura Developer ID nem notarização Apple.** O macOS pode bloquear sua abertura. Os detalhes da versão, código-fonte e hashes de verificação estão na [página de downloads](https://github.com/ferreiralisson/toca-desk/releases/latest).
+
 ## Funcionalidades atuais
 
 - **Visão geral:** saúde do sistema, CPU, memória, disco e processos obtidos pelo Mole, com atualização manual, atalho ⌘R e horário da última leitura.
