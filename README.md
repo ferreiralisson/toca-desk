@@ -20,6 +20,24 @@ O aplicativo é escrito em Swift, com SwiftUI e AppKit. As consultas estruturada
 
 **Esta versão ainda não possui assinatura Developer ID nem notarização Apple.** O macOS pode bloquear sua abertura. Os detalhes da versão, código-fonte e hashes de verificação estão na [página de downloads](https://github.com/ferreiralisson/toca-desk/releases/latest).
 
+### Se o macOS bloquear a abertura
+
+O instalador ainda não possui assinatura Developer ID nem notarização Apple. Por isso, pode aparecer o aviso de que a Apple não conseguiu verificar se `TocaDesk-Installer.pkg` está livre de malware. Essa mensagem não é uma verificação de segurança concluída.
+
+Se você baixou o arquivo da [página de lançamentos deste repositório](https://github.com/ferreiralisson/toca-desk/releases/latest) e confia na origem:
+
+1. Tente abrir `TocaDesk-Installer.pkg` e feche o aviso.
+2. Acesse **menu Apple → Ajustes do Sistema → Privacidade e Segurança**.
+3. Role até **Segurança** e localize o bloqueio referente ao instalador.
+4. Clique em **Abrir Mesmo Assim**, autentique-se se solicitado e confirme em **Abrir**.
+5. Conclua a instalação e abra **Toca Desk** pela pasta **Aplicativos**. Se o aplicativo também apresentar o mesmo aviso de verificação, repita o procedimento para ele.
+
+Se o botão não aparecer, tente abrir o arquivo novamente e volte aos ajustes. Em Macs gerenciados por uma empresa, a opção pode depender do administrador.
+
+A exceção se aplica ao item escolhido; não é necessário desativar o Gatekeeper. Este procedimento se destina ao aviso de software não verificado, não a alertas de malware detectado ou arquivo danificado.
+
+Referência: [orientações oficiais da Apple sobre abertura de apps no Mac](https://support.apple.com/pt-br/102445).
+
 ## Funcionalidades atuais
 
 - **Visão geral:** saúde do sistema, CPU, memória, disco e processos obtidos pelo Mole, com atualização manual, atalho ⌘R e horário da última leitura.
