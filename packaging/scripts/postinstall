@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+# $3 is the target volume. Keeping paths relative to it also enables staged tests.
+volume="${3:-/}"
+base="${volume%/}"
+cli="$base/Library/Application Support/TocaDesk/CLI/mo"
+[[ -x "$cli" ]] || { echo 'Mole CLI ausente no pacote instalado.' >&2; exit 1; }
+# CLI payload is always installed privately. Terminal aliases are optional and
+# must never replace an existing Homebrew/manual executable or follow a symlink.
+for directory in "$base/usr" "$base/usr/local" "$base/usr/local/bin"; do
+    if [[ -L "$directory" || ( -e "$directory" && ! -d "$directory" ) ]]; then
+        echo "Atalhos não criados: diretório redirecionado $directory. O app usará a cópia própria."
+        exit 0
+    fi
+done
+mkdir -p "$base/usr/local/bin"
+for name in mo mole; do
+    destination="$base/usr/local/bin/$name"
+    if [[ -e "$destination" || -L "$destination" ]]; then
+        echo "Instalação existente preservada: $destination"
+        continue
+    fi
+    temporary="$(mktemp "$base/usr/local/bin/.tocadesk.XXXXXX")"
+    printf '%s\n' '#!/bin/bash' 'exec "/Library/Application Support/TocaDesk/CLI/mo" "$@"' > "$temporary"
+    chmod 755 "$temporary"
+    # Atomic no-clobber publication; an existing destination is never replaced.
+    if ! ln "$temporary" "$destination"; then
+        echo "Atalho não criado; destino já ocupado: $destination"
+    fi
+    rm -f "$temporary"
+done

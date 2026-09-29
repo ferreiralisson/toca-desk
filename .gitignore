@@ -1,0 +1,49 @@
+# Swift Package Manager and generated application/installers
+.build/
+.swiftpm/
+/dist/
+/build/
+DerivedData/
+*.xcresult
+*.dSYM/
+
+# Legacy local outputs from the previous name
+/Assets/MoleDesk.iconset/
+/Assets/MoleDesk.icns
+/Assets/MoleDesk.png
+
+# Generated icons (recreated by scripts/create-icon.swift)
+/Assets/TocaDesk.iconset/
+/Assets/TocaDesk.icns
+/Assets/TocaDesk.png
+
+# macOS and per-user editor settings
+.DS_Store
+.AppleDouble
+._*
+xcuserdata/
+*.xcuserstate
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local credentials, signing material and environment overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.mobileprovision
+*.provisionprofile
+
+# Local logs, Python caches and assistant workspace settings
+*.log
+__pycache__/
+*.py[cod]
+.venv/
+.codex/
+.agents/

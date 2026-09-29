@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+# Installation is limited to the running system, whose architecture we verify.
+if [[ "${3:-/}" != "/" ]]; then
+    echo 'Selecione o disco de inicialização para instalar o Toca Desk.' >&2
+    exit 1
+fi
+if [[ "$(/usr/bin/uname -m)" != "arm64" ]]; then
+    echo 'Este instalador é para Macs com Apple Silicon.' >&2
+    exit 1
+fi
+if /usr/bin/pgrep -x TocaDesk >/dev/null; then
+    echo 'Feche o Toca Desk antes de continuar a instalação.' >&2
+    exit 1
+fi
+# Never let the privileged payload follow a redirected destination.
+for path in '/Library/Application Support/TocaDesk' '/Library/Application Support/TocaDesk/CLI' '/Library/Application Support/TocaDesk/Sources' '/Applications/Toca Desk.app'; do
+    if [[ -L "$path" ]]; then
+        echo "Destino redirecionado por link simbólico: $path. Instalação interrompida." >&2
+        exit 1
+    fi
+done

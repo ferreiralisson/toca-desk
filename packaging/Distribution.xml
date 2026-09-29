@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+  <title>Toca Desk + Mole CLI</title>
+  <welcome file="welcome.html" mime-type="text/html"/>
+  <conclusion file="conclusion.html" mime-type="text/html"/>
+  <options customize="never" require-scripts="false" hostArchitectures="arm64" rootVolumeOnly="true"/>
+  <domains enable_localSystem="true" enable_currentUserHome="false" enable_anywhere="false"/>
+  <allowed-os-versions><os-version min="14.0"/></allowed-os-versions>
+  <choices-outline><line choice="default"/></choices-outline>
+  <choice id="default" title="Mole CLI e Toca Desk" visible="false"><pkg-ref id="local.tocadesk.complete"/></choice>
+  <pkg-ref id="local.tocadesk.complete" version="0.1.2" onConclusion="none">TocaDeskComponents.pkg</pkg-ref>
+</installer-gui-script>

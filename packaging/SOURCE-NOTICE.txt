@@ -1,0 +1,17 @@
+Mole CLI 1.51.0 — Copyright dos autores do Mole.
+Licença: GNU GPL versão 3, incluída em ../CLI/LICENSE e no arquivo fonte.
+Projeto: https://github.com/tw93/Mole
+Versão: https://github.com/tw93/Mole/releases/tag/V1.51.0
+
+O arquivo source-V1.51.0.tar.gz contém o código-fonte correspondente completo,
+sem modificações, incluindo go.mod, go.sum, Makefile e scripts de compilação.
+Os scripts de shell instalados são cópias sem modificações desse código.
+Os binários analyze-go e status-go são os artefatos oficiais darwin-arm64 da
+mesma versão; seus hashes estão nos arquivos de integridade do projeto.
+Para compilar, extraia a fonte e consulte Makefile e go.mod; execute make build para compilação local.
+O pacote Toca Desk pode ser reconstruído com scripts/build-installer.sh no
+projeto da interface. Nenhuma instalação do Homebrew é incluída ou alterada.
+
+A cópia de CLI deste pacote é gerenciada pelo instalador e instalada como
+root-owned. Use uma nova versão do pacote para atualizá-la. Não execute o
+aplicativo nem o Mole com sudo; as operações solicitam acesso quando necessário.
