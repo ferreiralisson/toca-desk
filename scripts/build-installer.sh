@@ -32,7 +32,7 @@ chmod -R u+w "$PAYLOAD"
 # Explicitly disable bundle relocation: always install into /Applications.
 pkgbuild --analyze --root "$PAYLOAD" "$STAGE/components.plist"
 /usr/libexec/PlistBuddy -c 'Add :0:BundleIsRelocatable bool false' "$STAGE/components.plist"
-pkgbuild --root "$PAYLOAD" --component-plist "$STAGE/components.plist" --scripts packaging/scripts --identifier local.tocadesk.complete --version 0.1.2 --install-location / --ownership recommended "$STAGE/TocaDeskComponents.pkg"
+pkgbuild --root "$PAYLOAD" --component-plist "$STAGE/components.plist" --scripts packaging/scripts --identifier local.tocadesk.complete --version 0.1.3 --install-location / --ownership recommended "$STAGE/TocaDeskComponents.pkg"
 productbuild --distribution packaging/Distribution.xml --resources packaging/resources --package-path "$STAGE" "$ROOT/dist/TocaDesk-Installer.pkg"
 pkgutil --payload-files "$STAGE/TocaDeskComponents.pkg" > "$ROOT/dist/TocaDesk-Installer-files.txt"
 shasum -a 256 "$ROOT/dist/TocaDesk-Installer.pkg" > "$ROOT/dist/TocaDesk-Installer.sha256"

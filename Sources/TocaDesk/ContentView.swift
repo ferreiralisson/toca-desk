@@ -33,7 +33,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 10) {
                 Image(systemName: "leaf.fill").font(.title2).foregroundStyle(accent).frame(width: 36, height: 36).background(accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
-                VStack(alignment: .leading, spacing: 1) { Text("mole desk").font(.system(size: 21, weight: .bold, design: .rounded)); Text("Um respiro para o seu Mac").font(.system(size: 9)).foregroundStyle(.secondary) }
+                VStack(alignment: .leading, spacing: 1) { Text("Toca Desk").font(.system(size: 21, weight: .bold, design: .rounded)); Text("Um respiro para o seu Mac").font(.system(size: 9)).foregroundStyle(.secondary) }
             }.padding(.bottom, 32).padding(.top, 22)
             nav("Visão geral", "square.grid.2x2", "overview")
             nav("Armazenamento", "internaldrive", "disk")

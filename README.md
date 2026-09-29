@@ -29,7 +29,7 @@ O aplicativo é escrito em Swift, com SwiftUI e AppKit. As consultas estruturada
 - **Integração flexível:** detecção do Mole via Homebrew em Intel/Apple Silicon, `~/.local/bin`, instalação dedicada do pacote ou seleção manual do executável.
 - **Experiência nativa:** tema claro/escuro do sistema, navegação por teclado e rótulos acessíveis.
 
-A versão atual é **0.1.2**, integrada ao **Mole CLI 1.51.0**. O painel e o explorador são gráficos; as demais ferramentas ainda apresentam a interface textual do Mole dentro do aplicativo. Mensagens do CLI podem aparecer em inglês. O [documento de evolução gráfica](docs/EXPERIENCIA-GRAFICA.md) descreve propostas futuras, não recursos já disponíveis.
+A versão atual é **0.1.3**, integrada ao **Mole CLI 1.51.0**. O painel e o explorador são gráficos; as demais ferramentas ainda apresentam a interface textual do Mole dentro do aplicativo. Mensagens do CLI podem aparecer em inglês. O [documento de evolução gráfica](docs/EXPERIENCIA-GRAFICA.md) descreve propostas futuras, não recursos já disponíveis.
 
 ## Requisitos
 
@@ -91,7 +91,7 @@ Em um Mac Apple Silicon:
 
 Saídas:
 
-- `dist/TocaDesk-Installer.pkg`: instala Toca Desk 0.1.2 e Mole CLI 1.51.0.
+- `dist/TocaDesk-Installer.pkg`: instala Toca Desk 0.1.3 e Mole CLI 1.51.0.
 - `dist/TocaDesk-Installer.sha256`: checksum do pacote gerado.
 - `dist/TocaDesk-Installer-files.txt`: relação de arquivos do payload.
 
