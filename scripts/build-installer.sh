@@ -2,6 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
+source scripts/version.sh
 if [ "$(uname -m)" != "arm64" ]; then
   echo "O instalador completo requer Apple Silicon: o CLI incluído é darwin-arm64." >&2
   exit 1
@@ -32,8 +33,12 @@ chmod -R u+w "$PAYLOAD"
 # Explicitly disable bundle relocation: always install into /Applications.
 pkgbuild --analyze --root "$PAYLOAD" "$STAGE/components.plist"
 /usr/libexec/PlistBuddy -c 'Add :0:BundleIsRelocatable bool false' "$STAGE/components.plist"
-pkgbuild --root "$PAYLOAD" --component-plist "$STAGE/components.plist" --scripts packaging/scripts --identifier local.tocadesk.complete --version 0.1.3 --install-location / --ownership recommended "$STAGE/TocaDeskComponents.pkg"
-productbuild --distribution packaging/Distribution.xml --resources packaging/resources --package-path "$STAGE" "$ROOT/dist/TocaDesk-Installer.pkg"
+pkgbuild --root "$PAYLOAD" --component-plist "$STAGE/components.plist" --scripts packaging/scripts --identifier local.tocadesk.complete --version "$APP_VERSION" --install-location / --ownership recommended "$STAGE/TocaDeskComponents.pkg"
+mkdir -p "$STAGE/resources"
+cp packaging/resources/* "$STAGE/resources/"
+sed "s/@APP_VERSION@/$APP_VERSION/g" packaging/Distribution.xml > "$STAGE/Distribution.xml"
+sed "s/@APP_VERSION@/$APP_VERSION/g" packaging/resources/welcome.html > "$STAGE/resources/welcome.html"
+productbuild --distribution "$STAGE/Distribution.xml" --resources "$STAGE/resources" --package-path "$STAGE" "$ROOT/dist/TocaDesk-Installer.pkg"
 pkgutil --payload-files "$STAGE/TocaDeskComponents.pkg" > "$ROOT/dist/TocaDesk-Installer-files.txt"
 shasum -a 256 "$ROOT/dist/TocaDesk-Installer.pkg" > "$ROOT/dist/TocaDesk-Installer.sha256"
 echo "Instalador criado: $ROOT/dist/TocaDesk-Installer.pkg"

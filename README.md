@@ -47,7 +47,7 @@ Referência: [orientações oficiais da Apple sobre abertura de apps no Mac](htt
 - **Integração flexível:** detecção do Mole via Homebrew em Intel/Apple Silicon, `~/.local/bin`, instalação dedicada do pacote ou seleção manual do executável.
 - **Experiência nativa:** tema claro/escuro do sistema, navegação por teclado e rótulos acessíveis.
 
-A versão atual é **0.1.3**, integrada ao **Mole CLI 1.51.0**. O painel e o explorador são gráficos; as demais ferramentas ainda apresentam a interface textual do Mole dentro do aplicativo. Mensagens do CLI podem aparecer em inglês. O [documento de evolução gráfica](docs/EXPERIENCIA-GRAFICA.md) descreve propostas futuras, não recursos já disponíveis.
+A versão mais recente está na [página de downloads](https://github.com/ferreiralisson/toca-desk/releases/latest), integrada ao **Mole CLI 1.51.0**. O painel e o explorador são gráficos; as demais ferramentas ainda apresentam a interface textual do Mole dentro do aplicativo. Mensagens do CLI podem aparecer em inglês. O [documento de evolução gráfica](docs/EXPERIENCIA-GRAFICA.md) descreve propostas futuras, não recursos já disponíveis.
 
 ## Requisitos
 
@@ -109,7 +109,7 @@ Em um Mac Apple Silicon:
 
 Saídas:
 
-- `dist/TocaDesk-Installer.pkg`: instala Toca Desk 0.1.3 e Mole CLI 1.51.0.
+- `dist/TocaDesk-Installer.pkg`: instala a versão do Toca Desk definida em `VERSION` e Mole CLI 1.51.0.
 - `dist/TocaDesk-Installer.sha256`: checksum do pacote gerado.
 - `dist/TocaDesk-Installer-files.txt`: relação de arquivos do payload.
 
@@ -170,3 +170,24 @@ Toca Desk é software livre sob a **GNU General Public License versão 3 (`GPL-3
 O [Mole CLI](https://github.com/tw93/Mole), de tw93 e colaboradores, é o mecanismo de análise e manutenção e conserva sua GPL v3. O [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm), de Miguel de Icaza e colaboradores, fornece o terminal sob licença MIT. Os créditos e textos aplicáveis estão em [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). A licença não concede direitos sobre o nome ou o logotipo do Mole; veja a [política de marca original](https://github.com/tw93/Mole/blob/main/TRADEMARK.md).
 
 Contribuições são bem-vindas. Leia [CONTRIBUTING.md](CONTRIBUTING.md) para preparar o ambiente, validar mudanças e enviar um pull request. Ao publicar binários em Releases, disponibilize também a fonte exata da interface, dependências correspondentes, scripts de compilação e fonte do CLI; mantenha os avisos incluídos no aplicativo e no instalador.
+
+
+## Publicação automática no GitHub
+
+Cada push na **`main`** executa o workflow [Publicar versão](https://github.com/ferreiralisson/toca-desk/actions/workflows/release.yml). Isso inclui merges de pull requests e mudanças de documentação.
+
+1. Calcula a próxima versão de correção a partir da maior tag `vX.Y.Z` e de `VERSION`: por exemplo, `0.1.3` → `0.1.4`.
+2. Cria um commit de distribuição com essa versão, baseado no commit que iniciou a execução.
+3. Executa testes, compila em um runner macOS Apple Silicon e gera `.pkg`, `.dmg`, fontes e checksums.
+4. Confere a versão e a arquitetura dentro do instalador e a correspondência com o código-fonte.
+5. Cria a tag e prepara um rascunho da release. Após enviar todos os arquivos, publica como a versão mais recente na página de downloads.
+
+As novidades são os títulos dos commits desde a última tag. Escreva mensagens de commit que expliquem as mudanças ao usuário. O link de download do README passa a apontar para a nova versão automaticamente.
+
+O commit de distribuição fica na **tag**, sem fazer um novo push na `main`; isso evita um ciclo de publicações. O arquivo `VERSION` na `main` é a versão-base, enquanto o arquivo na tag contém a versão exata daquele lançamento. Para reconstruir uma versão publicada, use sua tag.
+
+Também é possível executar manualmente em **Actions → Publicar versão → Run workflow**, escolhendo a branch `main`. Informe uma versão maior, como `0.2.0`, para uma mudança de versão menor/maior, e novidades em Markdown se desejar. Deixe a versão vazia para incremento automático. Desmarque **Publicar tag e downloads** para validar sem criar tag nem release; os arquivos ficam nos artefatos da execução por 14 dias.
+
+As execuções são serializadas. Se chegarem vários pushes enquanto uma versão está sendo compilada, o GitHub pode substituir execuções ainda pendentes pela mais recente; os commits continuam incluídos na próxima versão. Uma falha nos testes ou no build impede a criação da tag. Se a falha ocorrer durante o envio dos downloads, pode restar uma tag/rascunho: confira a execução antes de publicar o rascunho, ou execute novamente para gerar uma nova versão.
+
+Não é necessário cadastrar token pessoal: a publicação usa o `GITHUB_TOKEN` da execução com permissão de conteúdo. A pipeline mantém assinatura local ad hoc e **não adiciona notarização Apple**; as instruções de “Abrir Mesmo Assim” são incluídas nas releases.

@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
+source scripts/version.sh
 swift scripts/create-icon.swift "$(pwd)/Assets"
 iconutil -c icns Assets/TocaDesk.iconset -o Assets/TocaDesk.icns
 swift build --build-system native -c release
@@ -13,7 +14,7 @@ for resource in "$BIN_DIR"/*.bundle; do
   [ -e "$resource" ] || continue
   cp -R "$resource" "$APP/Contents/Resources/"
 done
-cat > "$APP/Contents/Info.plist" <<'PLIST'
+cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
@@ -23,8 +24,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleExecutable</key><string>TocaDesk</string>
 <key>CFBundleIconFile</key><string>TocaDesk</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.1.3</string>
-<key>CFBundleVersion</key><string>4</string>
+<key>CFBundleShortVersionString</key><string>${APP_VERSION}</string>
+<key>CFBundleVersion</key><string>${APP_VERSION}</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSPrincipalClass</key><string>NSApplication</string>

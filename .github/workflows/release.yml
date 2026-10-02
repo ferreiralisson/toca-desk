@@ -1,0 +1,93 @@
+name: Publicar versão
+run-name: Toca Desk — ${{ github.event_name }} — ${{ github.sha }}
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versão X.Y.Z (opcional; vazio incrementa automaticamente)'
+        required: false
+        type: string
+      notes:
+        description: 'Novidades desta versão (Markdown; opcional)'
+        required: false
+        type: string
+      publish:
+        description: 'Publicar tag e downloads (desmarque para apenas validar)'
+        default: true
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: toca-desk-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      RELEASE_VERSION: ${{ inputs.version }}
+      RELEASE_NOTES: ${{ inputs.notes }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validar versão e preparar commit da release
+        shell: bash
+        run: |
+          python3 scripts/test-release.py
+          python3 scripts/prepare-release.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add VERSION
+          git commit -m "Release v$(cat VERSION)"
+          echo "RELEASE_TAG=v$(cat VERSION)" >> "$GITHUB_ENV"
+          echo "RELEASE_VERSION=$(cat VERSION)" >> "$GITHUB_ENV"
+      - name: Testar e compilar em Apple Silicon
+        shell: bash
+        run: |
+          test "$(uname -m)" = arm64
+          swift --version
+          swift test --build-system native
+          python3 scripts/test-installer.py
+          ./scripts/build-installer.sh
+          ./scripts/package-dmg.sh
+          ./scripts/package-source.sh
+          python3 scripts/verify-release.py
+      - name: Preparar notas e checksums
+        shell: bash
+        run: |
+          python3 scripts/release-notes.py
+          cd dist
+          shasum -a 256 TocaDesk-Installer.pkg TocaDesk.dmg TocaDesk-source.tar.gz > SHA256SUMS.txt
+          shasum -a 256 -c SHA256SUMS.txt
+      - name: Salvar artefatos da execução
+        uses: actions/upload-artifact@v4
+        with:
+          name: TocaDesk-${{ env.RELEASE_VERSION }}
+          path: |
+            dist/TocaDesk-Installer.pkg
+            dist/TocaDesk.dmg
+            dist/TocaDesk-source.tar.gz
+            dist/SHA256SUMS.txt
+            dist/RELEASE-NOTES.md
+          if-no-files-found: error
+          retention-days: 14
+      - name: Criar tag e publicar downloads
+        if: github.event_name == 'push' || inputs.publish
+        shell: bash
+        run: |
+          git tag -a "$RELEASE_TAG" -m "Toca Desk $RELEASE_VERSION"
+          git push origin "refs/tags/$RELEASE_TAG"
+          gh release create "$RELEASE_TAG" --verify-tag --draft \
+            --title "Toca Desk $RELEASE_VERSION" --notes-file dist/RELEASE-NOTES.md
+          gh release upload "$RELEASE_TAG" \
+            dist/TocaDesk-Installer.pkg dist/TocaDesk.dmg dist/TocaDesk-source.tar.gz dist/SHA256SUMS.txt
+          gh release edit "$RELEASE_TAG" --draft=false --latest
+          gh release view "$RELEASE_TAG" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"

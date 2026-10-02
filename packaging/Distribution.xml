@@ -8,5 +8,5 @@
   <allowed-os-versions><os-version min="14.0"/></allowed-os-versions>
   <choices-outline><line choice="default"/></choices-outline>
   <choice id="default" title="Mole CLI e Toca Desk" visible="false"><pkg-ref id="local.tocadesk.complete"/></choice>
-  <pkg-ref id="local.tocadesk.complete" version="0.1.3" onConclusion="none">TocaDeskComponents.pkg</pkg-ref>
+  <pkg-ref id="local.tocadesk.complete" version="@APP_VERSION@" onConclusion="none">TocaDeskComponents.pkg</pkg-ref>
 </installer-gui-script>
