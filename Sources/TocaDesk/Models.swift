@@ -1,13 +1,12 @@
 import Foundation
-import AppKit
-import Combine
+import Observation
 
-struct Snapshot: Decodable {
-    struct Hardware: Decodable { let model: String; let cpu_model: String; let total_ram: String; let os_version: String }
-    struct CPU: Decodable { let usage: Double }
-    struct Memory: Decodable { let used: Double; let total: Double; let used_percent: Double }
-    struct Disk: Decodable { let mount: String; let used: Double; let total: Double; let used_percent: Double }
-    struct Activity: Decodable, Identifiable { var id: Int { pid }; let pid: Int; let name: String; let cpu: Double; let memory_bytes: Double? }
+struct Snapshot: Decodable, Equatable {
+    struct Hardware: Decodable, Equatable { let model: String; let cpu_model: String; let total_ram: String; let os_version: String }
+    struct CPU: Decodable, Equatable { let usage: Double }
+    struct Memory: Decodable, Equatable { let used: Double; let total: Double; let used_percent: Double }
+    struct Disk: Decodable, Equatable { let mount: String; let used: Double; let total: Double; let used_percent: Double }
+    struct Activity: Decodable, Equatable, Identifiable { var id: Int { pid }; let pid: Int; let name: String; let cpu: Double; let memory_bytes: Double? }
     let host: String
     let uptime: String
     let hardware: Hardware?
@@ -19,8 +18,8 @@ struct Snapshot: Decodable {
     let top_processes: [Activity]?
 }
 
-struct DiskReport: Decodable {
-    struct Entry: Decodable, Identifiable {
+struct DiskReport: Decodable, Equatable {
+    struct Entry: Decodable, Equatable, Identifiable {
         var id: String { path }
         let name: String
         let path: String
@@ -74,7 +73,7 @@ enum Tool: String, CaseIterable, Identifiable {
     func arguments(preview: Bool) -> [String] { [rawValue] + (preview && mutable ? ["--dry-run"] : []) }
 }
 
-struct Session: Identifiable {
+struct Session: Identifiable, Equatable {
     let id = UUID()
     let tool: Tool
     let preview: Bool
@@ -148,17 +147,19 @@ struct MoleClient {
 private final class OutputBuffer: @unchecked Sendable { var output = Data(); var error = Data() }
 private extension String { var nilIfEmpty: String? { isEmpty ? nil : self } }
 
-@MainActor final class AppModel: ObservableObject {
-    @Published var snapshot: Snapshot?
-    @Published var updated: Date?
-    @Published var loading = false
-    @Published var error: String?
-    @Published var executable: String?
-    @Published var session: Session?
-    @Published var report: DiskReport?
-    @Published var scanning = false
-    @Published var scanError: String?
-    @Published var version = ""
+@MainActor @Observable final class AppModel {
+    var snapshot: Snapshot?
+    var updated: Date?
+    var loading = false
+    var error: String?
+    var executable: String?
+    var session: Session?
+    var report: DiskReport? {
+        didSet { sortedEntries = (report?.entries ?? []).sorted { $0.size > $1.size } }
+    }
+    private(set) var sortedEntries: [DiskReport.Entry] = []
+    var scanning = false
+    var scanError: String?
     init() { executable = MoleClient.locate(custom: UserDefaults.standard.string(forKey: "molePath") ?? "") }
     func refresh() async {
         guard !loading else { return }
@@ -180,15 +181,14 @@ private extension String { var nilIfEmpty: String? { isEmpty ? nil : self } }
             report = try JSONDecoder().decode(DiskReport.self, from: data)
         } catch { scanError = error.localizedDescription }
     }
-    func selectExecutable() {
-        let panel = NSOpenPanel()
-        panel.title = "Selecione o executável mo"
-        panel.canChooseDirectories = false
-        if panel.runModal() == .OK, let url = panel.url {
-            guard FileManager.default.isExecutableFile(atPath: url.path) else { error = "Selecione um arquivo executável válido."; return }
-            UserDefaults.standard.set(url.path, forKey: "molePath")
-            executable = url.path
-            Task { await refresh() }
+    func selectExecutable(_ url: URL) {
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+              !isDirectory.boolValue, FileManager.default.isExecutableFile(atPath: url.path) else {
+            error = "Selecione um arquivo executável válido."; return
         }
+        UserDefaults.standard.set(url.path, forKey: "molePath")
+        executable = url.path
+        Task { await refresh() }
     }
 }

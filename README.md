@@ -45,14 +45,15 @@ Referência: [orientações oficiais da Apple sobre abertura de apps no Mac](htt
 - **Manutenção:** acesso a limpeza, desinstalação, otimização, artefatos de projetos e instaladores, com prévia `--dry-run` e confirmação antes de iniciar operações modificadoras.
 - **Monitor e histórico:** sessões integradas para consultar as ferramentas do CLI.
 - **Integração flexível:** detecção do Mole via Homebrew em Intel/Apple Silicon, `~/.local/bin`, instalação dedicada do pacote ou seleção manual do executável.
-- **Experiência nativa:** tema claro/escuro do sistema, navegação por teclado e rótulos acessíveis.
+- **Experiência nativa:** sidebar e navegação em SwiftUI, tema claro/escuro do sistema, navegação por teclado e rótulos acessíveis.
+- **Liquid Glass configurável:** em macOS 26+, controles usam o material e os estilos de botão nativos da Apple. Em Ajustes → Aparência, escolha Liquid Glass ou Clássico e configure o tom verde. Reduzir Transparência e Aumentar Contraste do macOS têm prioridade; macOS 14/15 usam a alternativa clássica.
 
 A versão mais recente está na [página de downloads](https://github.com/ferreiralisson/toca-desk/releases/latest), integrada ao **Mole CLI 1.51.0**. O painel e o explorador são gráficos; as demais ferramentas ainda apresentam a interface textual do Mole dentro do aplicativo. Mensagens do CLI podem aparecer em inglês. O [documento de evolução gráfica](docs/EXPERIENCIA-GRAFICA.md) descreve propostas futuras, não recursos já disponíveis.
 
 ## Requisitos
 
 - macOS 14 ou posterior.
-- Para compilar: Xcode com **Swift 6.0 ou posterior**, ferramentas de linha de comando selecionadas e licença do Xcode aceita. Embora o manifesto principal use Swift tools 5.9, as dependências fixadas exigem Swift 6.0.
+- Para compilar: Xcode com **Swift 6.2 ou posterior (Xcode 26+)**, ferramentas de linha de comando selecionadas e licença do Xcode aceita. Embora o manifesto principal use Swift tools 5.9, as dependências exigem Swift 6.0 e a interface Liquid Glass exige o SDK do macOS 26 ou posterior.
 - Internet na primeira compilação para resolver as dependências Swift. As versões e revisões estão em `Package.resolved`.
 - Python 3 para executar os testes do instalador.
 - Para usar o aplicativo avulso: Mole CLI instalado, com suporte a `status --json` e `analyze --json`. Consulte as [instruções oficiais do Mole](https://github.com/tw93/Mole#readme).
@@ -134,7 +135,7 @@ Nenhuma limpeza começa ao abrir o aplicativo. Uma prévia não autoriza permane
 
 As senhas solicitadas pelo CLI são digitadas no terminal integrado, sem armazenamento pela interface. Não há `sudo` global nem confirmação automática. As permissões de privacidade do macOS continuam válidas; pastas inacessíveis podem exigir ajustes em Privacidade e Segurança.
 
-Uma sessão ativa impede sair pelo menu. Use “Interromper” para enviar Ctrl+C e espere o encerramento. Interromper não desfaz mudanças já realizadas. O caminho do executável é a preferência persistida pela interface; o histórico de operações pertence ao Mole.
+Uma sessão ativa impede sair pelo menu. Use “Interromper” para enviar Ctrl+C e espere o encerramento. Interromper não desfaz mudanças já realizadas. O caminho do executável e as escolhas de aparência são persistidos pela interface; o histórico de operações pertence ao Mole.
 
 ## Testes
 

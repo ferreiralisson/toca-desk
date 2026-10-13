@@ -2,16 +2,15 @@ import SwiftUI
 import AppKit
 
 @main struct TocaDeskApp: App {
-    @StateObject private var model = AppModel()
+    @State private var model = AppModel()
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup("Toca Desk") {
-            ContentView().environmentObject(model)
-                .frame(minWidth: 1000, minHeight: 720)
-                .tint(.mint)
+            ContentView().environment(model)
+                .frame(minWidth: 900, minHeight: 640)
+                .tint(TocaTheme.accent)
         }
         .defaultSize(width: 1180, height: 820)
-        .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) {}
             CommandGroup(after: .toolbar) {

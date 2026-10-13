@@ -39,7 +39,7 @@ struct EmbeddedTerminal: NSViewRepresentable {
 }
 
 struct SessionView: View {
-    @EnvironmentObject var model: AppModel
+    @Environment(AppModel.self) private var model
     let session: Session
     @State private var finished = false
     @State private var exitCode: Int32?

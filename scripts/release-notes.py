@@ -11,7 +11,7 @@ if not notes:
     import re
     tags = [tag for tag in subprocess.check_output(['git', 'tag', '--list', 'v*', '--sort=-version:refname'], text=True).splitlines() if re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', tag)]
     revision = f'{tags[0]}..HEAD^' if tags else 'HEAD^'
-    notes = subprocess.check_output(['git', 'log', '--format=- %s', revision], text=True).strip()
+    notes = subprocess.check_output(['git', 'log', '--format=- %s%n%b', revision], text=True).strip()
     notes = notes or '- Atualização de distribuição e empacotamento.'
 body = f'''## Novidades — {version}
 

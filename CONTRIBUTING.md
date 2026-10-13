@@ -4,7 +4,7 @@ Contribuições de código, documentação, acessibilidade, traduções e relato
 
 ## Preparar uma mudança
 
-1. Faça um fork e clone o repositório em um Mac com macOS 14+ e Swift 6.0 ou posterior.
+1. Faça um fork e clone o repositório em um Mac com macOS 14+ e Swift 6.2 ou posterior (Xcode 26+).
 2. Crie uma branch para uma alteração com escopo claro.
 3. Siga as instruções do README para compilar e executar.
 4. Execute `swift test --build-system native` e `python3 scripts/test-installer.py`.

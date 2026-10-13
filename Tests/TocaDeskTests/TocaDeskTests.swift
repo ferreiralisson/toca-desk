@@ -37,4 +37,20 @@ final class TocaDeskTests: XCTestCase {
             XCTFail("Expected timeout")
         } catch { XCTAssertTrue(error.localizedDescription.contains("demorou")) }
     }
+    func testGlassFallsBackForUnsupportedSystemsAndAccessibility() {
+        XCTAssertTrue(InterfaceStyle.liquidGlass.usesGlass(supported: true, reduceTransparency: false, increaseContrast: false))
+        XCTAssertFalse(InterfaceStyle.liquidGlass.usesGlass(supported: false, reduceTransparency: false, increaseContrast: false))
+        XCTAssertFalse(InterfaceStyle.liquidGlass.usesGlass(supported: true, reduceTransparency: true, increaseContrast: false))
+        XCTAssertFalse(InterfaceStyle.liquidGlass.usesGlass(supported: true, reduceTransparency: false, increaseContrast: true))
+        XCTAssertFalse(InterfaceStyle.classic.usesGlass(supported: true, reduceTransparency: false, increaseContrast: false))
+    }
+    @MainActor func testStorageSortingKeepsPathIdentityAndClearsWithReport() throws {
+        let model = AppModel()
+        let json = #"{"path":"/tmp","total_size":30,"scan_status":"complete","entries":[{"name":"Small","path":"/tmp/small","size":10,"is_dir":true},{"name":"Big","path":"/tmp/big","size":20,"is_dir":true}]}"#
+        model.report = try JSONDecoder().decode(DiskReport.self, from: Data(json.utf8))
+        XCTAssertEqual(model.sortedEntries.map(\.id), ["/tmp/big", "/tmp/small"])
+        model.report = nil
+        XCTAssertTrue(model.sortedEntries.isEmpty)
+    }
+
 }
